@@ -78,7 +78,7 @@ public class Task2 {
 
     public static void main(String[] args) {
         // Example usage
-        Task2 account = new Task2("1234567890", 1000.0, "John Doe", "johndoe@example.com", "123-456-789");
+        Task2 account = new Task2("1234567890", 1000.0, "rumeysa ceyhan", "hntrtezz0001@gmail.com", "123-456-789");
 
         account.withdraw(900.0);
         account.credit(250.0);
