@@ -1,5 +1,4 @@
 import java.util.List;
-import java.util.ArrayList;
 
 public class Task2 {
     private String indexNumber;
@@ -7,11 +6,11 @@ public class Task2 {
     private String lastName;
     private List<Integer> grades;
 
-    public Task2 (String indexNumber, String firstName, String lastName, List<Integer> grades) {
+    public Task2(String indexNumber, String firstName, String lastName, List<Integer> grades) {
         this.indexNumber = indexNumber;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.grades = new ArrayList<>(grades);
+        this.grades = grades;
     }
 
     public String getIndexNumber() {
@@ -39,6 +38,11 @@ public class Task2 {
             sum += grade;
         }
         return (double) sum / grades.size();
+    }
+
+    @Override
+    public String toString() {
+        return firstName + " " + lastName + " (" + indexNumber + ") - Average: " + calculateAverageGrade();
     }
 }
 
