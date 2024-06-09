@@ -2,45 +2,53 @@ package pl.pp;
 
 import java.io.*;
 import java.nio.file.*;
-import java.util.Scanner;
+import java.util.*;
 
-public class Task1 {
+class Task1 {
     public static void main(String[] args) {
-        String userDirectory = System.getProperty("user.dir");
-        System.out.println("The current directory is:");
-        System.out.println(userDirectory);
-
         Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Enter the path to the input text file:");
+        System.out.println("Please enter the path of the input file:");
         String inputFilePath = scanner.nextLine();
-
-        System.out.println("Enter the path to the output text file:");
+        System.out.println("Please enter the path of the output file:");
         String outputFilePath = scanner.nextLine();
 
-        Path inputPath = Paths.get(inputFilePath);
+        Path inputFile = Paths.get(inputFilePath);
+        Path outputFile = Paths.get(outputFilePath);
+
+        while (!Files.exists(inputFile)) {
+            System.out.println("The input file does not exist. Please enter a valid path:");
+            inputFilePath = scanner.nextLine();
+            inputFile = Paths.get(inputFilePath);
+        }
 
         try {
-            if (!Files.exists(inputPath)) {
-                System.out.println("The input file does not exist. Please provide a valid file path.");
-                return;
+            List<String> lines = Files.readAllLines(inputFile);
+            Map<String, Integer> wordCount = new HashMap<>();
+
+            for (String line : lines) {
+                String[] words = line.split("\\s+");
+                for (String word : words) {
+                    word = word.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+                    wordCount.put(word, wordCount.getOrDefault(word, 0) + 1);
+                }
             }
 
-            long lineCount = Files.lines(inputPath).count();
+            int totalWords = wordCount.values().stream().mapToInt(Integer::intValue).sum();
+            System.out.println("Total number of words: " + totalWords);
 
-            System.out.println("Number of lines in the input file: " + lineCount);
-
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
-                writer.write("Input File: " + inputPath.getFileName() + "\n");
-                writer.write("Number of Lines: " + lineCount);
-            } catch (IOException e) {
-                System.out.println("Error writing to the output file.");
-                e.printStackTrace();
+            List<String> outputLines = new ArrayList<>();
+            outputLines.add("Filename: " + inputFile.getFileName());
+            outputLines.add("Total words: " + totalWords);
+            outputLines.add("Word count:");
+            for (Map.Entry<String, Integer> entry : wordCount.entrySet()) {
+                outputLines.add(entry.getKey() + ": " + entry.getValue());
+                System.out.println(entry.getKey() + ": " + entry.getValue());
             }
+
+            Files.write(outputFile, outputLines);
 
         } catch (IOException e) {
-            System.out.println("Error reading the input file.");
-            e.printStackTrace();
+            System.out.println("An error occurred while processing the file: " + e.getMessage());
         }
     }
 }
